@@ -1,56 +1,82 @@
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+
 from tkinter.ttk import Combobox
 from tkinter import *
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
-from pandas import DataFrame
 
 class ElectoralSystem:
     def __init__(self):
         self.root = Tk()
         self.root.title("Sistema electoral")
         self.root.iconbitmap("assets/elec-sys.ico")
-        self.root.geometry("1200x700")
+        self.root.geometry("1280x720")
 
         self.body()
 
         self.root.mainloop()
 
     def body(self):
-        Label(self.root, text="SISTEMA ELECTORAL", font=("Helvetica", 26)).place(x=50, y=50)
-        Label(self.root, text="Presidentes", font=("Helvetica", 18)).place(x=50, y=150)
-        presidentGraphic = Frame(bg="#949292", width=215, height=620)
-        presidentGraphic.place(x=50, y=200)
+        Frame(self.root, bg="#817985", width=1280, height=110).place(x=0, y=0)
+        Label(self.root, text="SISTEMA ELECTORAL", bg="#817985", font=("Helvetica", 26), fg="#ffffff").place(x=130, y=20)
+        Label(self.root, text="BARRA DE PRESIDENTES", font=("Helvetica", 18)).place(x=50, y=130)
+        self.presidentGraphic()
 
-        Data1 = {"Presidentes": ['A', 'B'], 'Elecciones': [50, 24]}
-        df1 = DataFrame(Data1, columns = ['Presidentes', 'Elecciones'])
-        df1 = df1[['Presidentes', 'Elecciones']].groupby('Presidentes').sum()
-
-        graphic1 = plt.Figure(figsize=(6, 5), dpi=50)
-        bars = graphic1.add_subplot(111)
-        bar1 = FigureCanvasTkAgg(graphic1, presidentGraphic)
-        bar1.get_tk_widget().pack(side=LEFT, fill=BOTH)
-        df1.plot(kind='bar', legend=True, ax=bars)
-        bars.set_title('Presidente')
-        
-        Label(self.root, text="Vicepresidentes", font=("Helvetica", 18)).place(x=50, y=450)
-        # FREE SPACE
+        Label(self.root, text="BARRA DE VICEPRESIDENTES", font=("Helvetica", 18)).place(x=50, y=430)
+        self.vicepresidentGraphic()
 
         Frame(self.root, width=2, height=500, bg="#000000").place(x=650, y=150)
-        Label(self.root, text="Ingrese su número de cédula: ", font=("Helvetica", 18)).place(x=700, y = 150)
+        Label(self.root, text="Ingrese su número de cédula: ", font=("Helvetica", 18)).place(x=700, y=150)
         Entry(self.root, width=18, font=("Helvetica", 25)).place(x=700, y=200)
-        Label(self.root, text="Presidente a elegir: ", font=("Helvetica", 18)).place(x=700, y = 350)
+        Label(self.root, text="Presidente a elegir: ", font=("Helvetica", 18)).place(x=700, y=300)
         presidentCombox = Combobox(self.root, state="readonly", width=25, font=("Helvetica", 18))
-        presidentCombox["values"] = ["Guillermo Lasso", "Segundo Andres Arauz", "Cynthia Viteri"]
-        presidentCombox.place(x=700, y=400)
+        presidentCombox["values"] = [
+            "Guillermo Lasso",
+            "Segundo Andres Arauz",
+            "Cynthia Viteri",
+        ]
+        presidentCombox.place(x=700, y=350)
 
-        Label(self.root, text="Vicepresidente a elegir: ", font=("Helvetica", 18)).place(x=700, y = 550)
+        Label(self.root, text="Vicepresidente a elegir: ", font=("Helvetica", 18)).place(x=700, y=400)
         vicepresidentCombox = Combobox(self.root, state="readonly", width=25, font=("Helvetica", 18))
         vicepresidentCombox["values"] = ["Doris Quiroz", "Ramiro Aguilar", "Jorge Glas"]
-        vicepresidentCombox.place(x=700, y=600)
+        vicepresidentCombox.place(x=700, y=450)
 
+        Button(self.root, text="Enviar voto", bg="#bd3338", fg="#ffffff", font=("Helvetica", 18), width=20).place(x=720, y=530)
 
+    def presidentGraphic(self):
+        presidentGraphic = Frame(self.root, width=550, height=320)
+        presidentGraphic.place(x=-90, y=180)
 
-if __name__ == '__main__':
+        fig, axs = plt.subplots(1, 3, dpi=60, figsize=(25, 4), sharey=True, facecolor="#e8e8e8")
+
+        fig.suptitle("Presidentes")
+        axs[0].bar(
+            ["Guillermo Lasso", "Segundo Andres Arauz", "Cynthia Viteri"],
+            [84, 45, 62],
+            color=["#022436", "#4a1146", "#8f0013"],
+        )
+
+        canvas = FigureCanvasTkAgg(fig, master=presidentGraphic)
+        canvas.draw()
+        canvas.get_tk_widget().place(x=0, y=0)
+
+    def vicepresidentGraphic(self):
+        vicepresidentGraphic = Frame(self.root, width=550, height=320)
+        vicepresidentGraphic.place(x=-90, y=480)
+
+        fig, axs = plt.subplots(1, 3, dpi=60, figsize=(25, 4), sharey=True, facecolor="#e8e8e8")
+
+        fig.suptitle("Vicepresidentes")
+        axs[0].bar(
+            ["Doris Quiroz", "Ramiro Aguilar", "Jorge Glas"],
+            [24, 52, 65],
+            color=["#022436", "#4a1146", "#8f0013"],
+        )
+
+        canvas = FigureCanvasTkAgg(fig, master=vicepresidentGraphic)
+        canvas.draw()
+        canvas.get_tk_widget().place(x=0, y=0)
+
+if __name__ == "__main__":
     ElectoralSystem()
