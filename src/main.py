@@ -17,24 +17,27 @@ class ElectoralSystem:
         self.root.mainloop()
 
     def body(self):
+
+        # TITLE        
         Frame(self.root, bg="#817985", width=1280, height=110).place(x=0, y=0)
         Label(self.root, text="SISTEMA ELECTORAL", bg="#817985", font=("Helvetica", 26), fg="#ffffff").place(x=130, y=20)
+        # GRAPHICS
+
         Label(self.root, text="BARRA DE PRESIDENTES", font=("Helvetica", 18)).place(x=50, y=130)
         self.presidentGraphic()
-
         Label(self.root, text="BARRA DE VICEPRESIDENTES", font=("Helvetica", 18)).place(x=50, y=430)
         self.vicepresidentGraphic()
 
+        # SEPARATOR
         Frame(self.root, width=2, height=500, bg="#000000").place(x=650, y=150)
+        
+        # FORMULARY
         Label(self.root, text="Ingrese su número de cédula: ", font=("Helvetica", 18)).place(x=700, y=150)
         Entry(self.root, width=18, font=("Helvetica", 25)).place(x=700, y=200)
+
         Label(self.root, text="Presidente a elegir: ", font=("Helvetica", 18)).place(x=700, y=300)
         presidentCombox = Combobox(self.root, state="readonly", width=25, font=("Helvetica", 18))
-        presidentCombox["values"] = [
-            "Guillermo Lasso",
-            "Segundo Andres Arauz",
-            "Cynthia Viteri",
-        ]
+        presidentCombox["values"] = ["Guillermo Lasso", "Segundo Andres Arauz", "Cynthia Viteri"]
         presidentCombox.place(x=700, y=350)
 
         Label(self.root, text="Vicepresidente a elegir: ", font=("Helvetica", 18)).place(x=700, y=400)
@@ -46,12 +49,12 @@ class ElectoralSystem:
 
     def presidentGraphic(self):
         presidentGraphic = Frame(self.root, width=550, height=320)
-        presidentGraphic.place(x=-90, y=180)
+        presidentGraphic.place(x=10, y=180)
 
-        fig, axs = plt.subplots(1, 3, dpi=60, figsize=(25, 4), sharey=True, facecolor="#e8e8e8")
+        fig, axs = plt.subplots(dpi=60, figsize=(8, 4), sharey=True, facecolor="#e8e8e8")
 
-        fig.suptitle("Presidentes")
-        axs[0].bar(
+        
+        axs.bar(
             ["Guillermo Lasso", "Segundo Andres Arauz", "Cynthia Viteri"],
             [84, 45, 62],
             color=["#022436", "#4a1146", "#8f0013"],
@@ -63,12 +66,12 @@ class ElectoralSystem:
 
     def vicepresidentGraphic(self):
         vicepresidentGraphic = Frame(self.root, width=550, height=320)
-        vicepresidentGraphic.place(x=-90, y=480)
+        vicepresidentGraphic.place(x=10, y=480)
 
-        fig, axs = plt.subplots(1, 3, dpi=60, figsize=(25, 4), sharey=True, facecolor="#e8e8e8")
+        fig, axs = plt.subplots(dpi=60, figsize=(8, 4), sharey=True, facecolor="#e8e8e8")
 
-        fig.suptitle("Vicepresidentes")
-        axs[0].bar(
+        
+        axs.bar(
             ["Doris Quiroz", "Ramiro Aguilar", "Jorge Glas"],
             [24, 52, 65],
             color=["#022436", "#4a1146", "#8f0013"],
