@@ -1,5 +1,4 @@
-# electoralSystem
-With SQLite3.
+# Electoral System
 
 ## Screenshot
 <img src="https://i.ibb.co/bR18VG5/94894894.png" alt="94894894">
