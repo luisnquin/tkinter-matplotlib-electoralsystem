@@ -2,11 +2,17 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
 from tkinter.ttk import Combobox
+from tkinter import messagebox
 from tkinter import *
 
+from databasef.db import DatabaseConnection
 
-class ElectoralSystem:
+
+
+class ElectoralSystem(DatabaseConnection):
     def __init__(self):
+        super().__init__()
+
         self.root = Tk()
         self.root.title("Sistema electoral")
         self.root.iconbitmap("assets/elec-sys.ico")
@@ -17,7 +23,6 @@ class ElectoralSystem:
         self.root.mainloop()
 
     def body(self):
-
         # TITLE        
         Frame(self.root, bg="#817985", width=1280, height=110).place(x=0, y=0)
         Label(self.root, text="SISTEMA ELECTORAL", bg="#817985", font=("Helvetica", 26), fg="#ffffff").place(x=130, y=20)
@@ -33,7 +38,8 @@ class ElectoralSystem:
         
         # FORMULARY
         Label(self.root, text="Ingrese su número de cédula: ", font=("Helvetica", 18)).place(x=700, y=150)
-        Entry(self.root, width=18, font=("Helvetica", 25)).place(x=700, y=200)
+        formEntry = Entry(self.root, width=18, font=("Helvetica", 25))
+        formEntry.place(x=700, y=200)
 
         Label(self.root, text="Presidente a elegir: ", font=("Helvetica", 18)).place(x=700, y=300)
         presidentCombox = Combobox(self.root, state="readonly", width=25, font=("Helvetica", 18))
@@ -45,7 +51,28 @@ class ElectoralSystem:
         vicepresidentCombox["values"] = ["Doris Quiroz", "Ramiro Aguilar", "Jorge Glas"]
         vicepresidentCombox.place(x=700, y=450)
 
-        Button(self.root, text="Enviar voto", bg="#bd3338", fg="#ffffff", font=("Helvetica", 18), width=20).place(x=720, y=530)
+        def insertFormData():
+            if formEntry.get() and presidentCombox.get() and vicepresidentCombox.get():
+                self.receivedData[0] = formEntry.get()
+                self.receivedData[1] = presidentCombox.get()
+                self.receivedData[2] = vicepresidentCombox.get()
+
+                self.insertOneData()
+                
+                if self.flag:
+                    self.presidentGraphic()
+                    self.vicepresidentGraphic()
+
+                    formEntry.delete(0, END)
+                else:
+                    self.flag = True
+            else:
+                messagebox.showwarning("Advertencia", "Verifica que los datos del formulario estén completos.")
+
+
+        theButton = Button(self.root, text="Enviar voto", command=lambda:insertFormData())
+        theButton.config(bg="#bd3338", fg="#ffffff", font=("Helvetica", 18), width=20)
+        theButton.place(x=720, y=530)
 
     def presidentGraphic(self):
         presidentGraphic = Frame(self.root, width=550, height=320)
@@ -53,10 +80,11 @@ class ElectoralSystem:
 
         fig, axs = plt.subplots(dpi=60, figsize=(8, 4), sharey=True, facecolor="#e8e8e8")
 
+        self.getCountPresidents()
         
         axs.bar(
             ["Guillermo Lasso", "Segundo Andres Arauz", "Cynthia Viteri"],
-            [84, 45, 62],
+            [self.countPre[0], self.countPre[1], self.countPre[2]],
             color=["#022436", "#4a1146", "#8f0013"],
         )
 
@@ -70,16 +98,18 @@ class ElectoralSystem:
 
         fig, axs = plt.subplots(dpi=60, figsize=(8, 4), sharey=True, facecolor="#e8e8e8")
 
-        
+        self.getCountVicepre()
+
         axs.bar(
             ["Doris Quiroz", "Ramiro Aguilar", "Jorge Glas"],
-            [24, 52, 65],
+            [self.countVicepre[0], self.countVicepre[1], self.countVicepre[2]],
             color=["#022436", "#4a1146", "#8f0013"],
         )
 
         canvas = FigureCanvasTkAgg(fig, master=vicepresidentGraphic)
         canvas.draw()
         canvas.get_tk_widget().place(x=0, y=0)
+
 
 if __name__ == "__main__":
     ElectoralSystem()
